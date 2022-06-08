@@ -22,6 +22,7 @@ function Table() {
             <th>Population</th>
             <th>Films</th>
             <th>Created</th>
+            <th>Edited</th>
             <th>Url</th>
           </tr>
         </thead>
