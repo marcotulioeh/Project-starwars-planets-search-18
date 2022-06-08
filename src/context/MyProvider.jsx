@@ -4,6 +4,8 @@ import MyContext from './MyContext';
 
 function MyProvider({ children }) {
   const [resultsApi, setResultsApi] = useState([]);
+  const [searchFilter, setSeachFilter] = useState([]);
+  const [filterByName, setFilterByName] = useState({ name: '' });
 
   useEffect(() => {
     const apiPlanetsSearch = async () => {
@@ -11,6 +13,7 @@ function MyProvider({ children }) {
       const { results } = await response.json();
       console.log(results);
       setResultsApi(results);
+      setSeachFilter(results);
     };
     apiPlanetsSearch();
   }, []);
@@ -18,6 +21,10 @@ function MyProvider({ children }) {
   const headerTableContext = {
     resultsApi,
     setResultsApi,
+    searchFilter,
+    setSeachFilter,
+    filterByName,
+    setFilterByName,
   };
 
   return (
