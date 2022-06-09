@@ -3,11 +3,16 @@ import MyContext from '../context/MyContext';
 import Filter from './Filter';
 
 function Table() {
-  const { searchFilter } = useContext(MyContext);
+  const { searchFilter, numericFilter } = useContext(MyContext);
 
   return (
     <>
       <Filter />
+      {numericFilter.map((filter, index) => (
+        <p key={ `${filter.columnFilter} - ${index}` }>
+          {`${filter.columnFilter} ${filter.operatorFilter} ${filter.valueFilter}`}
+        </p>
+      ))}
       <table>
         <thead>
           <tr>
