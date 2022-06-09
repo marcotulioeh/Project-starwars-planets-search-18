@@ -8,17 +8,51 @@ function Filter() {
     resultsApi,
     filterByName,
     setFilterByName,
+    columnFilter,
+    setColumnFilter,
+    operatorFilter,
+    serOperatorFilter,
+    valueFilter,
+    setvalueFilter,
+    numericFilter,
+    setNumericFilter,
   } = useContext(MyContext);
 
   useEffect(() => {
+    console.log(resultsApi);
     const filterApi = resultsApi.filter((result) => (
-      result.name.toLowerCase().includes(filterByName)
+      result.name.toLowerCase().includes(filterByName.name)
     ));
-    setSeachFilter(filterApi);
-  }, [filterByName]);
+
+    const resultFilterArray = numericFilter.reduce((acc, currValue) => acc
+      .filter((planet) => {
+        switch (currValue.operatorFilter) {
+        case 'maior que':
+          return Number(planet[currValue.columnFilter]) > Number(currValue.valueFilter);
+        case 'menor que':
+          console.log('Ele Aqui:', Number(planet[currValue.columnFilter]));
+          return Number(planet[currValue.columnFilter]) < Number(currValue.valueFilter);
+        case 'igual a':
+          return Number(planet[currValue.columnFilter]) === Number(currValue.valueFilter);
+        default:
+          return true;
+        }
+      }), filterApi);
+
+    setSeachFilter(resultFilterArray);
+  }, [filterByName, numericFilter]);
 
   const hendleSearchFilter = ({ target }) => {
-    setFilterByName(target.value.toLowerCase());
+    setFilterByName({ name: target.value.toLowerCase() });
+  };
+
+  const handleFilter = () => {
+    const newNumericFilter = {
+      columnFilter,
+      operatorFilter,
+      valueFilter,
+    };
+    setNumericFilter([...numericFilter, newNumericFilter]);
   };
 
   return (
@@ -30,47 +64,59 @@ function Filter() {
           data-testid="name-filter"
         />
       </div>
+
       <div>
         <label htmlFor="column">
           Coluna:
-          <select id="column" name="colum" data-testid="column-filter">
-            <option value="population">Population</option>
-            <option value="orbital_period">Orbital Period</option>
-            <option value="diameter">Diameter</option>
-            <option value="rotation_period">Rotation Period</option>
-            <option value="surface_water">Surface Water</option>
+          <select
+            onChange={ ({ target }) => setColumnFilter(target.value) }
+            data-testid="column-filter"
+          >
+            <option>population</option>
+            <option>orbital_period</option>
+            <option>diameter</option>
+            <option>rotation_period</option>
+            <option>surface_water</option>
           </select>
         </label>
-      </div>
-      <div>
         <label htmlFor="maior">
           Operador:
-          <select id="maior" name="comparison" data-testid="comparison-filter">
-            <option value="menor que">Menor que</option>
-            <option value="maior que">Maior que</option>
-            <option value="igual a">Igual à</option>
+          <select
+            onChange={ ({ target }) => serOperatorFilter(target.value) }
+            data-testid="comparison-filter"
+          >
+            <option>maior que</option>
+            <option>menor que</option>
+            <option>igual a</option>
           </select>
         </label>
-      </div>
-      <div>
-        <input name="value" type="number" data-testid="value-filter" value="0" />
-        <button type="button" data-testid="button-filter">
+        <input
+          type="number"
+          value={ valueFilter }
+          placeholder="0"
+          onChange={ ({ target }) => setvalueFilter(target.value) }
+          data-testid="value-filter"
+        />
+        <button
+          type="button"
+          onClick={ handleFilter }
+          data-testid="button-filter"
+        >
           Filtrar
         </button>
       </div>
+
       <div>
         <label htmlFor="sort">
           Ordenar:
-          <select id="sort" name="column" data-testid="column-sort">
-            <option name="column" value="population">Population</option>
-            <option name="column" value="orbital_period">Orbital Period</option>
-            <option name="column" value="diameter">Diameter</option>
-            <option name="column" value="rotation_period">Rotation Period</option>
-            <option name="column" value="surface_water">Surface Water</option>
+          <select data-testid="column-sort">
+            <option>Population</option>
+            <option>Orbital Period</option>
+            <option>Diameter</option>
+            <option>Rotation Period</option>
+            <option>Surface Water</option>
           </select>
         </label>
-      </div>
-      <div>
         <label htmlFor="ascendente">
           Ascendente
           <input type="radio" name="" id="ascendente" />
@@ -79,8 +125,6 @@ function Filter() {
           Descendente
           <input type="radio" name="" id="descendente" />
         </label>
-      </div>
-      <div>
         <button type="button" data-testid="column-sort-button">
           Ordenar
         </button>
