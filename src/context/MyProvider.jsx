@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import MyContext from './MyContext';
 
+export const INITIAL_COLUMN = ['population',
+  'orbital_period', 'diameter', 'rotation_period', 'surface_water'];
+
 function MyProvider({ children }) {
   const [resultsApi, setResultsApi] = useState([]);
   const [searchFilter, setSeachFilter] = useState([]);
@@ -10,6 +13,7 @@ function MyProvider({ children }) {
   const [operatorFilter, serOperatorFilter] = useState('maior que');
   const [valueFilter, setvalueFilter] = useState(0);
   const [numericFilter, setNumericFilter] = useState([]);
+  const [columnOpitions, setColumnOpitions] = useState(INITIAL_COLUMN);
 
   useEffect(() => {
     const apiPlanetsSearch = async () => {
@@ -37,6 +41,8 @@ function MyProvider({ children }) {
     setvalueFilter,
     numericFilter,
     setNumericFilter,
+    columnOpitions,
+    setColumnOpitions,
   };
 
   return (
