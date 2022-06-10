@@ -3,7 +3,6 @@ import MyContext from '../context/MyContext';
 
 function Filter() {
   const {
-    searchFilter,
     setSeachFilter,
     resultsApi,
     filterByName,
