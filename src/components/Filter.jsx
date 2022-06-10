@@ -3,7 +3,6 @@ import MyContext from '../context/MyContext';
 
 function Filter() {
   const {
-    // searchFilter,
     setSeachFilter,
     resultsApi,
     filterByName,
@@ -16,10 +15,11 @@ function Filter() {
     setvalueFilter,
     numericFilter,
     setNumericFilter,
+    columnOpitions,
+    setColumnOpitions,
   } = useContext(MyContext);
 
   useEffect(() => {
-    console.log(resultsApi);
     const filterApi = resultsApi.filter((result) => (
       result.name.toLowerCase().includes(filterByName.name)
     ));
@@ -40,10 +40,17 @@ function Filter() {
       }), filterApi);
 
     setSeachFilter(resultFilterArray);
-  }, [filterByName, numericFilter]);
+  }, [filterByName, numericFilter, resultsApi]);
 
   const hendleSearchFilter = ({ target }) => {
     setFilterByName({ name: target.value.toLowerCase() });
+  };
+
+  const deleteColumnOptions = () => {
+    // console.log('Primeira:', columnOpitions);
+    const options = columnOpitions.filter((column) => column !== columnFilter);
+    setColumnOpitions(options);
+    // console.log('Segunda:', columnOpitions);
   };
 
   const handleFilter = () => {
@@ -52,7 +59,20 @@ function Filter() {
       operatorFilter,
       valueFilter,
     };
+    deleteColumnOptions();
     setNumericFilter([...numericFilter, newNumericFilter]);
+
+    const remove = columnOpitions.filter((column) => column !== columnFilter);
+    setColumnOpitions(remove);
+  };
+
+  // console.log('Fora:', columnOpitions);
+
+  const handleRemovFilters = () => {
+    setNumericFilter([]);
+    setColumnFilter(columnOpitions);
+    serOperatorFilter('maior que');
+    setvalueFilter(0);
   };
 
   return (
@@ -72,11 +92,8 @@ function Filter() {
             onChange={ ({ target }) => setColumnFilter(target.value) }
             data-testid="column-filter"
           >
-            <option>population</option>
-            <option>orbital_period</option>
-            <option>diameter</option>
-            <option>rotation_period</option>
-            <option>surface_water</option>
+            {columnOpitions.map((columnOpition, index) => (
+              <option key={ index }>{ columnOpition }</option>))}
           </select>
         </label>
         <label htmlFor="maior">
@@ -102,7 +119,7 @@ function Filter() {
           onClick={ handleFilter }
           data-testid="button-filter"
         >
-          Filtrar
+          FILTRAR
         </button>
       </div>
 
@@ -126,7 +143,16 @@ function Filter() {
           <input type="radio" name="" id="descendente" />
         </label>
         <button type="button" data-testid="column-sort-button">
-          Ordenar
+          ORDENAR
+        </button>
+      </div>
+      <div>
+        <button
+          type="button"
+          onClick={ handleRemovFilters }
+          data-testid="button-remove-filters"
+        >
+          REMOVER FILTROS
         </button>
       </div>
     </section>
