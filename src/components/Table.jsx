@@ -1,17 +1,37 @@
 import React, { useContext } from 'react';
 import MyContext from '../context/MyContext';
 import Filter from './Filter';
+import { INITIAL_COLUMN } from '../context/MyProvider';
 
 function Table() {
-  const { searchFilter, numericFilter } = useContext(MyContext);
+  const { searchFilter,
+    numericFilter,
+    setNumericFilter,
+    setColumnOpitions,
+    // columnOpitions,
+  } = useContext(MyContext);
+
+  const handleDelete = (index) => {
+    const delet = numericFilter.filter((numerc, filterIndex) => filterIndex !== index);
+    console.log(numericFilter);
+    setNumericFilter(delet);
+    const filterDelet = delet.map((filter) => filter.columnFilter);
+    const resetColumn = INITIAL_COLUMN.filter((column) => !filterDelet.includes(column));
+    setColumnOpitions(resetColumn);
+  };
+
+  // console.log('Numeric aqui:', numericFilter);
 
   return (
     <>
       <Filter />
       {numericFilter.map((filter, index) => (
-        <p key={ `${filter.columnFilter} - ${index}` }>
+        <div key={ `${filter.columnFilter} - ${index}` } data-testid="filter">
           {`${filter.columnFilter} ${filter.operatorFilter} ${filter.valueFilter}`}
-        </p>
+          <button type="button" onClick={ () => handleDelete(index) }>
+            x
+          </button>
+        </div>
       ))}
       <table>
         <thead>
