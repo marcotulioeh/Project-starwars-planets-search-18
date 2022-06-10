@@ -3,6 +3,7 @@ import MyContext from '../context/MyContext';
 
 function Filter() {
   const {
+    searchFilter,
     setSeachFilter,
     resultsApi,
     filterByName,
@@ -40,7 +41,7 @@ function Filter() {
       }), filterApi);
 
     setSeachFilter(resultFilterArray);
-  }, [filterByName, numericFilter, resultsApi]);
+  }, [filterByName, numericFilter, resultsApi, setSeachFilter]);
 
   const hendleSearchFilter = ({ target }) => {
     setFilterByName({ name: target.value.toLowerCase() });
